@@ -1,6 +1,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Invocation} from "../model/Invocation";
-import {MusicService} from "../music.service";
+import {MusicService} from "../services/music.service";
 
 @Component({
   selector: 'app-elevator',
