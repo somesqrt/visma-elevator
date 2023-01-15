@@ -1,0 +1,40 @@
+<div class="demo">
+  <h1 class="demo__project">Visma Elevator</h1>
+  <p class="demo__name">Stanislav Ivanov</p>
+</div>
+
+<div
+  id = "elevatorID"
+  class="elevator"
+  [ngStyle]="{'top': 'calc(100dvh / 10 * ' + (10 - currentFloor) + ')',
+  'transition': 'top ' + movementTime +'s linear'}"
+>
+  <audio id="player" src="/assets/music/elevator-music.mp3"></audio>
+  <app-elevator
+    (elevatorCall)="callElevatorFromElevator($event)"
+    (currentElevatorPosition)="currentElevatorPosition = $event"
+    (movementTime)="movementTime = $event"
+    (currentTargetFloor)="currentFloor = $event"
+    [invocationLine]="invocationLine"
+  ></app-elevator>
+</div>
+<div
+  class="plan"
+  *ngFor="let floor of [10,9,8,7,6,5,4,3,2,1]"
+>
+  <div class="elevator-placeholder">
+  </div>
+  <div class="floor">
+    <app-floor
+      (buttonPressed)="callElevator(floor, $event)"
+      [myFloor]="floor"
+      [elevatorFloor]="currentElevatorPosition"
+      [endUpFloor] = " floor === 1"
+      [endDownFloor] = " floor !== 10"
+      [currentFloor]="currentElevatorPosition === floor"
+      [bg]="bgs[floor-1]"
+      [displayDownButton]="floor !== 1"
+      [displayUpButton]="floor !== 10"
+    ></app-floor>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="controls">
+
+  <button
+    *ngFor="let floor of floors"
+    (click)="onButtonClick(floor.floorNumber)"
+    [ngClass]="{'controls__btn--active': floor.active===true}"
+    [disabled]="currentFloor === floor.floorNumber"
+    class="controls__btn"
+  >
+    {{floor.floorNumber}}
+  </button>
+</div>

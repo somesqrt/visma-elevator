@@ -1,0 +1,23 @@
+<div class="floor"
+     [ngStyle]="{'background-image': bg}"
+>
+
+  <div class="controls">
+    <button
+      class="controls__btn"
+      *ngIf="displayUpButton"
+      (click)="onUpButtonClick()"
+      [ngClass]="{'controls__btn--active': buttons[0].active}"
+    >
+      <fa-icon [icon]="iconChevronUp"></fa-icon>
+    </button>
+    <button
+      class="controls__btn"
+      *ngIf="displayDownButton"
+      (click)="onDownButtonCLick()"
+      [ngClass]="{'controls__btn--active': buttons[1].active}"
+    >
+      <fa-icon [icon]="iconChevronDown"></fa-icon>
+    </button>
+  </div>
+</div>
