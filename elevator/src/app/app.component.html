@@ -4,7 +4,7 @@
 </div>
 
 <div
-  id = "elevatorID"
+  id="elevatorID"
   class="elevator"
   [ngStyle]="{'top': 'calc(100dvh / 10 * ' + (10 - currentFloor) + ')',
   'transition': 'top ' + movementTime +'s linear'}"
@@ -27,10 +27,11 @@
   <div class="floor">
     <app-floor
       (buttonPressed)="callElevator(floor, $event)"
+      [targetFloor]="currentFloor"
       [myFloor]="floor"
       [elevatorFloor]="currentElevatorPosition"
-      [endUpFloor] = " floor === 1"
-      [endDownFloor] = " floor !== 10"
+      [endUpFloor]=" floor === 1"
+      [endDownFloor]=" floor !== 10"
       [currentFloor]="currentElevatorPosition === floor"
       [bg]="bgs[floor-1]"
       [displayDownButton]="floor !== 1"

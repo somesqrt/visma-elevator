@@ -1,4 +1,4 @@
-import {Component, Input, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {Invocation} from "./model/Invocation";
 import {Directions} from "./model/Directions";
 
@@ -17,17 +17,26 @@ export class AppComponent {
 
   constructor() {
     for (let i = 0; i < 10; i++) {
-      this.bgs.push('url(assets/img/floor-bg' + (Math.floor(Math.random() * 8) + 1) +'.jpeg)')
+      this.bgs.push('url(assets/img/floor-bg' + (Math.floor(Math.random() * 8) + 1) + '.jpeg)')
     }
   }
 
-  callElevatorFromElevator(callTo: any){
+  callElevatorFromElevator(callTo: any) {
     this.callElevator(callTo.invocationFloor, callTo.direction);
   }
+
   callElevator(floor: number, direction: Directions) {
-    this.invocationLine = [
-      ...this.invocationLine,
-      {invocationFloor: floor, direction: direction}
-    ]
+    if (this.currentElevatorPosition > floor) {
+      this.invocationLine = [
+        ...this.invocationLine,
+        {invocationFloor: floor, direction: direction, directionRelativeToTheElevator: "DOWN"}
+      ]
+    } else {
+      this.invocationLine = [
+        ...this.invocationLine,
+        {invocationFloor: floor, direction: direction, directionRelativeToTheElevator: "UP"}
+      ]
+    }
+
   }
 }

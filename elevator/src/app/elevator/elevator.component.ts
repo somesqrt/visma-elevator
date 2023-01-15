@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges,} from '@angular/core';
 import {Invocation} from "../model/Invocation";
 import {MusicService} from "../services/music.service";
 
@@ -42,19 +42,21 @@ export class ElevatorComponent implements OnChanges {
     if (this.currentFloor > floorNumber) {
       newInvocation = {
         invocationFloor: floorNumber,
-        direction: "DOWN"
+        direction: "DOWN",
+        directionRelativeToTheElevator: "DOWN"
       }
       this.elevatorCall.emit(newInvocation)
     } else if (this.currentFloor < floorNumber) {
       newInvocation = {
         invocationFloor: floorNumber,
-        direction: "UP"
+        direction: "UP",
+        directionRelativeToTheElevator: "UP"
       }
       this.elevatorCall.emit(newInvocation)
     } else {
       return;
     }
-    this.Flag=true
+    this.Flag = true
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,15 +68,17 @@ export class ElevatorComponent implements OnChanges {
     }
     for (let i = 0; i < this.invocationLine.length - 1; i++) {
       const currentCheckedInvocation = this.invocationLine[i]
-      if (currentCheckedInvocation.direction !== newInvocation.direction) {
+      if (currentCheckedInvocation.directionRelativeToTheElevator !== newInvocation.directionRelativeToTheElevator && currentCheckedInvocation.direction !== newInvocation.direction) {
         continue;
       }
 
       const directionUpAndInvokerIsOnElevatorsWay = currentCheckedInvocation.direction == "UP"
+        && currentCheckedInvocation.direction === newInvocation.direction
         && currentCheckedInvocation.invocationFloor >= newInvocation.invocationFloor
         && this.currentFloor < newInvocation.invocationFloor
 
       const directionDownAndInvokerIsOnElevatorsWay = currentCheckedInvocation.direction == "DOWN"
+        && currentCheckedInvocation.direction === newInvocation.direction
         && currentCheckedInvocation.invocationFloor <= newInvocation.invocationFloor
         && this.currentFloor > newInvocation.invocationFloor
 
@@ -87,28 +91,27 @@ export class ElevatorComponent implements OnChanges {
     }
 
     console.log(this.invocationLine)
-    if(this.Flag == true){
+    if (this.Flag) {
       this.startMoving();
-      this.Flag=true
+      this.Flag = true
     }
-
 
 
   }
 
   startMoving() {
+    this.musicService.fadeIn(1)
     clearInterval(this.floorUpdateInterval);
     console.log(this.invocationLine)
     clearTimeout(this.elevatorStartDelay)
 
     let oldPosition = this.element!.getBoundingClientRect().y
 
-    this.musicService.toggle()
     this.musicService.setVolume(1)
     const floorOfCurrentDirection: Invocation = this.invocationLine[0]
     this.movementTime.emit(Math.abs(floorOfCurrentDirection.invocationFloor - this.currentFloor) * 2)
 
-    console.log("Сейчас едем к: ",floorOfCurrentDirection.invocationFloor)
+    console.log("Сейчас едем к: ", floorOfCurrentDirection.invocationFloor)
 
     this.elevatorStartDelay = setTimeout(() => {
 
@@ -117,23 +120,20 @@ export class ElevatorComponent implements OnChanges {
         console.log("старая ", oldPosition)
         console.log("новая ", this.element!.getBoundingClientRect().y)
         console.log("экран ", window.screen.height)
-        if (floorOfCurrentDirection.direction === "UP" && Math.abs(oldPosition-this.element!.getBoundingClientRect().y) > 80) {
+        if (floorOfCurrentDirection.directionRelativeToTheElevator === "UP" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > 80) {
           oldPosition = this.element!.getBoundingClientRect().y
           this.currentFloor++;
-        } else if(floorOfCurrentDirection.direction === "DOWN" && Math.abs(oldPosition-this.element!.getBoundingClientRect().y) > 80){
+        } else if (floorOfCurrentDirection.directionRelativeToTheElevator === "DOWN" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > 80) {
           oldPosition = this.element!.getBoundingClientRect().y
           this.currentFloor--;
         }
-
         let counter = 0;
-        if(Math.abs(oldPosition-this.element!.getBoundingClientRect().y) ===0){
+        if (Math.abs(oldPosition - this.element!.getBoundingClientRect().y) === 0) {
           counter++;
-          if(counter === 2){
-            this.musicService.toggle()
-            this.Flag=true
+          if (counter === 2) {
+            this.Flag = true
           }
         }
-
         this.currentElevatorPosition.emit(this.currentFloor);
         console.log(this.invocationLine)
         console.log(this.currentFloor)
@@ -145,13 +145,12 @@ export class ElevatorComponent implements OnChanges {
           this.invocationLine.splice(this.invocationLine.indexOf(floorOfCurrentDirection), 1)
           clearInterval(this.floorUpdateInterval);
           if (this.invocationLine.length !== 0) {
-            this.musicService.toggle()
             setTimeout(() => {
               this.startMoving()
             }, 500);
           } else {
-            this.musicService.toggle()
-            this.Flag=true
+            this.musicService.fadeOut(0.2)
+            this.Flag = true
           }
         }
 

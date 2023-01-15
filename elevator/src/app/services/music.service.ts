@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 export class MusicService {
   player: HTMLAudioElement;
   fadeInterval: any;
+
   constructor() {
     this.player = new Audio();
     this.player.src = 'assets/music/elevator-music.mp3';
@@ -16,43 +17,27 @@ export class MusicService {
     this.player.play();
   }
 
-  pause() {
-    this.player.pause();
-  }
-
-  toggle() {
-    if (this.player.paused) {
-      this.fadeIn()
-    } else {
-      this.fadeOut()
-
-    }
-  }
-
   setVolume(volume: number) {
     this.player.volume = volume;
   }
 
-  fadeOut() {
+  fadeOut(minValue: number) {
     let currentVolume = this.player.volume;
-    let fadeStep = 0.34;
+    let fadeStep = 0.025;
 
     this.fadeInterval = setInterval(() => {
-      if (this.player.volume <= fadeStep) {
+      if (minValue ! <= currentVolume - fadeStep) {
         clearInterval(this.fadeInterval);
-        this.player.volume = 0;
-        this.pause();
+        this.player.volume = minValue;
+
       } else {
         this.player.volume -= fadeStep;
       }
     }, 50);
   }
 
-  fadeIn() {
-    this.setVolume(0)
-    let maxVolume = 1;
-    let fadeStep = 0.1;
-
+  fadeIn(maxVolume: number) {
+    let fadeStep = 0.05;
     this.play();
     this.fadeInterval = setInterval(() => {
       if (this.player.volume >= maxVolume - fadeStep) {

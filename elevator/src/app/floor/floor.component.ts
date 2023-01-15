@@ -7,7 +7,7 @@ import {Directions} from "../model/Directions";
   templateUrl: './floor.component.html',
   styleUrls: ['./floor.component.scss']
 })
-export class FloorComponent implements OnChanges{
+export class FloorComponent implements OnChanges {
 
   iconChevronUp = faChevronUp;
   iconChevronDown = faChevronDown;
@@ -20,7 +20,7 @@ export class FloorComponent implements OnChanges{
   @Input() currentFloor: boolean = false;
   @Input() myFloor!: number;
   @Input() elevatorFloor!: number;
-
+  @Input() targetFloor!: number;
   @Output() buttonPressed = new EventEmitter<Directions>()
 
   buttons = [
@@ -30,36 +30,28 @@ export class FloorComponent implements OnChanges{
 
   onUpButtonClick() {
     this.buttons[0].active = true
-    if(this.myFloor > this.elevatorFloor){
-      this.buttonPressed.emit("UP")
-    }else{
+
+    if (this.endUpFloor) {
       this.buttonPressed.emit("DOWN")
+    } else {
+      this.buttonPressed.emit("UP")
     }
-    /*if(this.endUpFloor === true){
-      this.buttonPressed.emit("DOWN")
-    }else{
-      this.buttonPressed.emit("UP")
-    }*/
   }
 
   onDownButtonCLick() {
     this.buttons[1].active = true
-    if(this.myFloor < this.elevatorFloor){
+
+    if (this.endDownFloor) {
       this.buttonPressed.emit("DOWN")
-    }else{
+    } else {
       this.buttonPressed.emit("UP")
     }
-    /*if(this.endDownFloor === true){
-      this.buttonPressed.emit("DOWN")
-    }else{
-      this.buttonPressed.emit("UP")
-    }*/
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.myFloor === this.elevatorFloor){
-      this.buttons[0].active=false;
-      this.buttons[1].active=false;
+    if (this.myFloor === this.elevatorFloor && this.targetFloor === this.elevatorFloor) {
+      this.buttons[0].active = false;
+      this.buttons[1].active = false;
     }
 
   }
