@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges,} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild,} from '@angular/core';
 import {Invocation} from "../model/Invocation";
 import {MusicService} from "../services/music.service";
 
@@ -35,6 +35,8 @@ export class ElevatorComponent implements OnChanges {
   ]
   floorUpdateInterval: any
   elevatorStartDelay: any;
+
+  @ViewChild("elevator") elevatorElement!: ElementRef;
 
   onButtonClick(floorNumber: number) {
     this.floors[floorNumber - 1].active = true
@@ -120,10 +122,10 @@ export class ElevatorComponent implements OnChanges {
         console.log("старая ", oldPosition)
         console.log("новая ", this.element!.getBoundingClientRect().y)
         console.log("экран ", window.screen.height)
-        if (floorOfCurrentDirection.directionRelativeToTheElevator === "UP" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > 80) {
+        if (floorOfCurrentDirection.directionRelativeToTheElevator === "UP" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > this.elevatorElement.nativeElement.offsetHeight -2) {
           oldPosition = this.element!.getBoundingClientRect().y
           this.currentFloor++;
-        } else if (floorOfCurrentDirection.directionRelativeToTheElevator === "DOWN" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > 80) {
+        } else if (floorOfCurrentDirection.directionRelativeToTheElevator === "DOWN" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > this.elevatorElement.nativeElement.offsetHeight -1) {
           oldPosition = this.element!.getBoundingClientRect().y
           this.currentFloor--;
         }
