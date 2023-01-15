@@ -122,10 +122,10 @@ export class ElevatorComponent implements OnChanges {
         console.log("старая ", oldPosition)
         console.log("новая ", this.element!.getBoundingClientRect().y)
         console.log("экран ", window.screen.height)
-        if (floorOfCurrentDirection.directionRelativeToTheElevator === "UP" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > this.elevatorElement.nativeElement.offsetHeight -2) {
+        if (floorOfCurrentDirection.directionRelativeToTheElevator === "UP" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > this.elevatorElement.nativeElement.offsetHeight -5) {
           oldPosition = this.element!.getBoundingClientRect().y
           this.currentFloor++;
-        } else if (floorOfCurrentDirection.directionRelativeToTheElevator === "DOWN" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > this.elevatorElement.nativeElement.offsetHeight -1) {
+        } else if (floorOfCurrentDirection.directionRelativeToTheElevator === "DOWN" && Math.abs(oldPosition - this.element!.getBoundingClientRect().y) > this.elevatorElement.nativeElement.offsetHeight -5) {
           oldPosition = this.element!.getBoundingClientRect().y
           this.currentFloor--;
         }
